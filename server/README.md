@@ -33,6 +33,8 @@
 ```bash
 $ npm install
 ```
+After this copy `.env.template` file, rename it to `.env` and fill with your settings.
+
 
 ## Running the app
 
