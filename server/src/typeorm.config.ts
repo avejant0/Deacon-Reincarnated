@@ -1,4 +1,6 @@
-export default function(): unknown {
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+
+export default (): PostgresConnectionOptions => {
   return {
     type: 'postgres',
     host: 'localhost',
