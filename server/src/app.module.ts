@@ -10,7 +10,7 @@ import typeormConfig from './typeorm.config';
     ConfigModule.forRoot({
       envFilePath: '.env',
     }),
-    TypeOrmModule.forRoot(typeormConfig()),
+    TypeOrmModule.forRoot(typeormConfig),
     UserModule,
   ],
   controllers: [],
