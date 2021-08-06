@@ -1,0 +1,20 @@
+{
+  "folders": [
+    {
+      "name": "Configs (Root)",
+      "path": "."
+    },
+    {
+      "name": "Server",
+      "path": "server"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.git": true,
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/server": true
+    }
+  }
+}
