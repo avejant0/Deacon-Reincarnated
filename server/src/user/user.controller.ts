@@ -1,25 +1,50 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, BadRequestException, Query } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto, GetUserDto } from './dto';
+import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@Controller('user')
+@Controller('users')
+@ApiTags('Users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
-
+  @ApiQuery({
+    name: 'email',
+    required: false,
+    type: String,
+  })
+  @ApiResponse({ status: 200, type: GetUserDto, isArray: true })
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll(@Query('email') email: string = null): Promise<GetUserDto[]> {
+    if (!email) {
+      return this.userService.findAll();
+    }
+    
+    return this.userService.findAllByEmail(email);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @ApiResponse({ status: 200, type: GetUserDto })
+  @ApiResponse({ status: 404, description: 'Not Found' })
+  @Get(':login')
+  async findByLogin(@Param('login') login: string): Promise<GetUserDto> {
+    const user = await this.userService.findByLogin(login);
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+    
+    return user;
+  }
+
+  @ApiResponse({ status: 200, type: GetUserDto })
+  @ApiResponse({ status: 400, description: 'Bad Request'})
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto): Promise<GetUserDto> {
+    try {
+      return await this.userService.create(createUserDto);
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
   }
 
   @Patch(':id')
